@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: devenv/Dockerfile.api
-    command: uwsgi uwsgi.ini --py-auto-reload 1 --worker-reload-mercy 5
     ports:
       - "8080:8080"
     environment:

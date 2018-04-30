@@ -11,8 +11,10 @@ Here are some things we need help with:
 
 # Setup
 Within the repo you will find a docker-compose.yaml file. If you're familiar with docker and docker-compose, great! You can get started by simply running docker-compose up and that will create an API and Postgres container for you.
-If you are not familiar with those tools, feel free to setup whatever environment you are comfortable working within. At the very least you will need a Python environment to run your API and a SQL database. There is a todo_schema.sql file that will create a basic table and sequence to get you started. To run the API, simply run go run main.go. You will need a few variables within the app, so please make sure those are provided.
-Environment Variables
+
+If you are not familiar with those tools, feel free to setup whatever environment you are comfortable working within. At the very least you will need a Python environment to run your API and a SQL database. There is a todo_schema.sql file that will create a basic table and sequence to get you started. To run the API, simply run `uwsgi uwsgi.ini --py-auto-reload 1 --worker-reload-mercy 5`. You will need a few variables within the app, so please make sure those are provided.
+
+Environment Variables:
 - DB_USER
 - DB_PASSWORD
 - DB_NAME
