@@ -1,0 +1,20 @@
+api_logging:
+    dict_config:
+        version: 1
+        disable_existing_loggers: False
+        formatters:
+            detailed:
+                format: "%(asctime)s [%(threadName)s] - %(name)s - %(levelname)s - %(message)s"
+                datefmt: "%Y-%m-%d %H:%M:%S"
+        handlers:
+            console:
+                class: logging.StreamHandler
+                level: DEBUG
+                formatter: detailed
+                stream: ext://sys.stderr
+        loggers:
+            api:
+                level: INFO
+        root:
+            level: INFO
+            handlers: [console]

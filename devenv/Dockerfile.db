@@ -1,0 +1,3 @@
+FROM library/postgres
+
+COPY ./devenv/todo_schema.sql /docker-entrypoint-initdb.d/

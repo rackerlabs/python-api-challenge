@@ -1,0 +1,5 @@
+uWSGI
+falcon
+PyYAML
+easydict
+psycopg2
