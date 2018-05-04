@@ -14,5 +14,6 @@ log = logging.getLogger()
 app = falcon.API(request_type=CustomRequest, middleware=[RequestMiddleware(), LoggingMiddleware()])
 app.add_route('/health', HealthHandler())
 app.add_route('/todos', TodosHandler())
+app.add_route('/todos/{todoID}', TodosHandler())
 
 log.info("Started with config file: {}".format(settings.config_file))
