@@ -1,3 +1,5 @@
 **/*.pyc
 .idea
 api/docs/index.html
+.pytest_cache
+Pipfile
