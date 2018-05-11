@@ -5,11 +5,11 @@ Within this repository, you will find a hastily thrown together application.  It
 
 Here are some things we need help with:
 
-- We have create and list features but lack the ability to update.  Introduce a new PUT endpoint at `/todos/{todoID}` that receives a JSON body containing title and status.  The feature should update the existing record and return a JSON body representing the new state of the todo item.
+- We have `create` and `list` features but lack the ability to `update`.  Introduce a new PUT endpoint at `/todos/{todoID}` that receives a JSON body containing title and status.  The feature should update the existing record and return a JSON body representing the updated todo item.
 
-- You may notice the lack of tests in the repo, maybe set a good example and add tests to your method if you have time.  That way the other devs can copy-paste from your good example.  Once done, go ahead and open a pull request again the repo.
+- You may notice the lack of tests.  Consider setting a good example by adding tests to your method if you have time, so that the other devs can copy/paste from your good example.  Don't forget to update this README with instructions for how to run the tests!
 
-- As mentioned before, we have create and list already in place.  The dev team was super excited because they knocked this out faster than anyone thought, maybe too fast.  Feel free to open a GitHub issue and point out some of those shortcuts.  If you're feeling bold, Pull Requests are always welcome!
+- As mentioned before, we have `create` and `list` already in place.  The dev team was super excited because they knocked this out faster than anyone thought - maybe too fast!  As such, you may find a number of issues in this repository.  Feel free to correct any issues you may find, or implement any best practices you feel are missing.
 
 # Setup
 Within the repo you will find a `docker-compose.yaml` file. If you're familiar with docker and docker-compose, great! You can get started by simply running `docker-compose up` and that will create an API and Postgres container for you.
