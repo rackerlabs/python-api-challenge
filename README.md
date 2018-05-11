@@ -9,7 +9,7 @@ Here are some things we need help with:
 
 - You may notice the lack of tests.  Consider setting a good example by adding tests to your method if you have time, so that the other devs can copy/paste from your good example.  Don't forget to update this README with instructions for how to run the tests!
 
-- As mentioned before, we have create and list already in place.  The dev team was super excited because they knocked this out faster than anyone thought - maybe too fast!  As such, you may find a number of issues with this repo.  Feel free to correct any issues you may find.
+- As mentioned before, we have *create* and *list* already in place.  The dev team was super excited because they knocked this out faster than anyone thought - maybe too fast!  As such, you may find a number of issues in this repository.  Feel free to correct any issues you may find, or implement any best practices you feel are missing.
 
 # Setup
 Within the repo you will find a `docker-compose.yaml` file. If you're familiar with docker and docker-compose, great! You can get started by simply running `docker-compose up` and that will create an API and Postgres container for you.
