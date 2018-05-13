@@ -36,8 +36,25 @@ class TodosHandler(object):
                                 password=os.environ["DB_PASSWORD"])
         cur = conn.cursor()
         cur.execute("INSERT INTO public.todo (title, status) VALUES ('{}', '{}')"
-            .format(body['title'], body['status']))
+                    .format(body['title'], body['status']))
         conn.commit()
         cur.close()
         conn.close()
+        resp.status = falcon.HTTP_200
+
+    def on_put(self, req, resp, todo_id):
+        body = json.loads(req.req_body)
+        conn = psycopg2.connect(host=os.environ["DB_HOST"],
+                                dbname=os.environ["DB_NAME"],
+                                user=os.environ["DB_USER"],
+                                password=os.environ["DB_PASSWORD"])
+        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("UPDATE public.todo SET (title, status) = ('{}', '{}') WHERE id = '{}' RETURNING *"
+                    .format(body['title'], body['status'], todo_id))
+        updated_todo = cur.fetchall()
+        conn.commit()
+        cur.close()
+        conn.close()
+        resp.set_header('Content-Type', 'application/json')
+        resp.body = json.dumps(updated_todo, sort_keys=False)
         resp.status = falcon.HTTP_200
