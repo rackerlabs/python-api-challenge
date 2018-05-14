@@ -49,8 +49,11 @@ class TodosHandler(object):
                                 user=os.environ["DB_USER"],
                                 password=os.environ["DB_PASSWORD"])
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute("UPDATE public.todo SET (title, status) = ('{}', '{}') WHERE id = '{}' RETURNING *"
-                    .format(body['title'], body['status'], todo_id))
+        # Construct an UPDATE statement according to what column data is in the body,
+        # since updating a todo item usually doesn't require updating the title.
+        cur.execute("UPDATE public.todo SET {} WHERE id = '{}' RETURNING *"
+                    .format(", ".join('{} = \'{}\''.format(i[0], i[1]) for i in body.items()),
+                            todo_id))
         updated_todo = cur.fetchall()
         conn.commit()
         cur.close()
