@@ -3,3 +3,5 @@ falcon
 PyYAML
 easydict
 psycopg2
+pytest
+pytest-falcon
