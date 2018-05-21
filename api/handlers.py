@@ -41,3 +41,27 @@ class TodosHandler(object):
         cur.close()
         conn.close()
         resp.status = falcon.HTTP_200
+
+
+    def on_put(self, req, resp):
+        try:
+            body = json.loads(req.req_body)
+            conn = psycopg2.connect(host=os.environ["DB_HOST"],
+                                dbname=os.environ["DB_NAME"],
+                                user=os.environ["DB_USER"],
+                                password=os.environ["DB_PASSWORD"])
+            cur = conn.cursor()
+
+            # I assumed both fields could be varchar
+            # Sorry I was not able to run the API response as I was completely
+            # blocked with the installations.
+
+            cur.execute("UPDATE public.todo set status=%s where title={title}"
+                        % (body['status']))
+            conn.commit()
+            cur.close()
+            conn.close()
+            resp.status = falcon.HTTP_200
+
+        except InternalError as ex:
+            raise Exception(ex)
