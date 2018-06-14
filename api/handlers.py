@@ -4,6 +4,7 @@ import os
 import falcon
 import psycopg2
 import psycopg2.extras
+from config.settings import API_DEFAULT_LIMIT
 
 
 class HealthHandler(object):
@@ -14,19 +15,32 @@ class HealthHandler(object):
 
 class TodosHandler(object):
 
+    def __init__(self, db):
+        self.db = db
+
+    @staticmethod
+    def get_marker_and_limit(req):
+        err = None
+        try:
+            marker = int(req.params.get('marker', 0))
+            try:
+                limit = int(req.params.get('limit', 0))
+            except ValueError:
+                err = "limit must be an integer number."
+        except ValueError:
+            err = "marker must be an integer number."
+        return marker, limit, err
+
     def on_get(self, req, resp):
-        conn = psycopg2.connect(host=os.environ["DB_HOST"],
-                                dbname=os.environ["DB_NAME"],
-                                user=os.environ["DB_USER"],
-                                password=os.environ["DB_PASSWORD"])
-        cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute("SELECT * FROM public.todo")
-        todos = cur.fetchall()
-        cur.close()
-        conn.close()
-        resp.set_header('Content-Type', 'application/json')
-        resp.body = json.dumps(todos, sort_keys=False)
-        resp.status = falcon.HTTP_200
+        marker, limit, err = self.get_marker_and_limit(req)
+        if err is None:
+            todos = self.db.get_todos(marker, limit)
+            resp.set_header('Content-Type', 'application/json')
+            resp.body = json.dumps(todos, sort_keys=False)
+            resp.status = falcon.HTTP_200
+        else:
+            resp.body = err
+            resp.status = falcon.HTTP_400
 
     def on_post(self, req, resp):
         body = json.loads(req.req_body)

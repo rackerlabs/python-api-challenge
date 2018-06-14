@@ -21,3 +21,5 @@ def _load_config_file(config_filename):
 
 
 config = _load_config_file(config_file)
+
+API_DEFAULT_LIMIT = int(os.environ.get('API_DEFAULT_LIMIT', '25'))

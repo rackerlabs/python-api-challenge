@@ -18,6 +18,26 @@ class StorageEngine(object):
         if self.conn is not None:
             self.conn.close()
 
+    def get_todos(self, marker, limit):
+        cur = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT * FROM public.todo limit %s offset %s", (limit, marker))
+        todos = cur.fetchall()
+        cur.close()
+
+        return todos
+
+    def add_todo(self, data):
+
+        cur = self.conn.cursor()
+        cur.execute("""INSERT INTO public.todo (title, status) VALUES (%s, %s); 
+                               SELECT currval('public.todo_id_seq');""",
+                    (data['title'], data['status']))
+        self.conn.commit()
+        inserted = cur.fetchone()
+        cur.close()
+        data['id'] = inserted[0][0]
+        return data
+
     def put_todo(self, todo_id, data):
         """
         :param todo_id:
