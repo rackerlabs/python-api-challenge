@@ -41,3 +41,23 @@ class TodosHandler(object):
         cur.close()
         conn.close()
         resp.status = falcon.HTTP_200
+
+
+class TodoHandler(object):
+
+    def __init__(self, db):
+        self.db = db
+
+    def on_put(self, req, resp, todo_id):
+        try:
+            todo = json.loads(req.req_body)
+            found, todo = self.db.put_todo(todo_id, todo)
+            if found:
+                resp.set_header('Content-Type', 'application/json')
+                resp.body = json.dumps(todo, sort_keys=False)
+                resp.status = falcon.HTTP_200
+            else:
+                resp.status = falcon.HTTP_404
+        except (ValueError, json.decoder.JSONDecodeError):
+            resp.status = falcon.HTTP_400
+            resp.body = 'Malformed JSON. Could not decode the request body. The JSON was incorrect.'
