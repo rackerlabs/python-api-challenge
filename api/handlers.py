@@ -1,9 +1,6 @@
 import json
-import os
-
 import falcon
-import psycopg2
-import psycopg2.extras
+
 from config.settings import API_DEFAULT_LIMIT
 
 
@@ -13,11 +10,7 @@ class HealthHandler(object):
         resp.status = falcon.HTTP_200
 
 
-class TodosHandler(object):
-
-    def __init__(self, db):
-        self.db = db
-
+class MarkerLimit(object):
     @staticmethod
     def get_marker_and_limit(req):
         """
@@ -28,12 +21,18 @@ class TodosHandler(object):
         try:
             marker = int(req.params.get('marker', 0))
             try:
-                limit = int(req.params.get('limit', 0))
+                limit = int(req.params.get('limit', API_DEFAULT_LIMIT))
             except ValueError:
                 err = "limit must be an integer number."
         except ValueError:
             err = "marker must be an integer number."
         return marker, limit, err
+
+
+class TodosHandler(MarkerLimit):
+
+    def __init__(self, db):
+        self.db = db
 
     def on_get(self, req, resp):
         marker, limit, err = self.get_marker_and_limit(req)
@@ -47,12 +46,16 @@ class TodosHandler(object):
             resp.status = falcon.HTTP_400
 
     def on_post(self, req, resp):
-        body = json.loads(req.req_body)
-        data = self.db.add_todo(body)
-        resp.set_header('Content-Type', 'application/json')
-        ret = {'id': data['id'], 'title': data['title'], 'status': data['status']}
-        resp.body = json.dumps(ret, sort_keys=False)
-        resp.status = falcon.HTTP_201
+        try:
+            body = json.loads(req.req_body)
+            data = self.db.add_todo(body)
+            resp.set_header('Content-Type', 'application/json')
+            ret = {'id': data['id'], 'title': data['title'], 'status': data['status']}
+            resp.body = json.dumps(ret, sort_keys=False)
+            resp.status = falcon.HTTP_201
+        except (ValueError, json.decoder.JSONDecodeError):
+            resp.status = falcon.HTTP_400
+            resp.body = 'Malformed JSON. Could not decode the request body. The JSON was incorrect.'
 
 
 class TodoHandler(object):
