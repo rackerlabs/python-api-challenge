@@ -5,7 +5,7 @@ import yaml
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# app_base = '/usr/src/app'
+
 app_base = BASE_DIR
 config_file = 'config/config.yaml'
 
