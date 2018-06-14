@@ -13,6 +13,10 @@ def client():
 
 # pytest will inject the object returned by the "client" function
 # as an additional parameter.
+def test_create(client):
+    data = {'title': 'new todo', 'status': 'Uncompleted'}
+    response = client.simulate_post('/todos/', json=data)
+    assert response.status == falcon.HTTP_200
 
 
 def test_put(client):
