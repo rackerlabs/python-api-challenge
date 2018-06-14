@@ -35,12 +35,17 @@ class TodosHandler(object):
                                 user=os.environ["DB_USER"],
                                 password=os.environ["DB_PASSWORD"])
         cur = conn.cursor()
-        cur.execute("INSERT INTO public.todo (title, status) VALUES (%s, %s)",
+        cur.execute("""INSERT INTO public.todo (title, status) VALUES (%s, %s); 
+                               SELECT currval('public.todo_id_seq');""",
                     (body['title'], body['status']))
         conn.commit()
+        inserted = cur.fetchall()
         cur.close()
         conn.close()
-        resp.status = falcon.HTTP_200
+        resp.set_header('Content-Type', 'application/json')
+        ret = {'id': inserted[0][0], 'title': body['title'], 'status': body['status']}
+        resp.body = json.dumps(ret, sort_keys=False)
+        resp.status = falcon.HTTP_201
 
 
 class TodoHandler(object):
