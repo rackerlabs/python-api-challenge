@@ -35,8 +35,8 @@ class TodosHandler(object):
                                 user=os.environ["DB_USER"],
                                 password=os.environ["DB_PASSWORD"])
         cur = conn.cursor()
-        cur.execute("INSERT INTO public.todo (title, status) VALUES ('{}', '{}')"
-            .format(body['title'], body['status']))
+        cur.execute("INSERT INTO public.todo (title, status) VALUES (%s, %s)",
+                    (body['title'], body['status']))
         conn.commit()
         cur.close()
         conn.close()
