@@ -20,7 +20,11 @@ class TodosHandler(object):
 
     @staticmethod
     def get_marker_and_limit(req):
-        err = None
+        """
+        :param req:
+        :return: marker, limit, err. if marker or limits are not int returns an err
+        """
+        marker, limit, err = 0, 0, None
         try:
             marker = int(req.params.get('marker', 0))
             try:
@@ -44,20 +48,9 @@ class TodosHandler(object):
 
     def on_post(self, req, resp):
         body = json.loads(req.req_body)
-        conn = psycopg2.connect(host=os.environ["DB_HOST"],
-                                dbname=os.environ["DB_NAME"],
-                                user=os.environ["DB_USER"],
-                                password=os.environ["DB_PASSWORD"])
-        cur = conn.cursor()
-        cur.execute("""INSERT INTO public.todo (title, status) VALUES (%s, %s); 
-                               SELECT currval('public.todo_id_seq');""",
-                    (body['title'], body['status']))
-        conn.commit()
-        inserted = cur.fetchall()
-        cur.close()
-        conn.close()
+        data = self.db.add_todo(body)
         resp.set_header('Content-Type', 'application/json')
-        ret = {'id': inserted[0][0], 'title': body['title'], 'status': body['status']}
+        ret = {'id': data['id'], 'title': data['title'], 'status': data['status']}
         resp.body = json.dumps(ret, sort_keys=False)
         resp.status = falcon.HTTP_201
 

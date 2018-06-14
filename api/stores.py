@@ -35,7 +35,8 @@ class StorageEngine(object):
         self.conn.commit()
         inserted = cur.fetchone()
         cur.close()
-        data['id'] = inserted[0][0]
+        print('inserted:', inserted)
+        data['id'] = inserted[0]
         return data
 
     def put_todo(self, todo_id, data):
