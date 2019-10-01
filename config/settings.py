@@ -4,7 +4,9 @@ import os
 import yaml
 
 
-app_base = '/usr/src/app'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+app_base = BASE_DIR
 config_file = 'config/config.yaml'
 
 
@@ -19,3 +21,5 @@ def _load_config_file(config_filename):
 
 
 config = _load_config_file(config_file)
+
+API_DEFAULT_LIMIT = int(os.environ.get('API_DEFAULT_LIMIT', '25'))
